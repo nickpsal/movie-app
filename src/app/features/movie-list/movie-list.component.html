@@ -14,7 +14,10 @@
   <div
     class="mat-elevation-z2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
   >
-    <mat-card *ngFor="let movie of movies()" class="movie-card flex flex-col items-center text-center shadow hover:shadow-lg transition duration-300 p-4 rounded-lg">
+    <mat-card
+      *ngFor="let movie of movies()"
+      class="movie-card flex flex-col items-center text-center shadow hover:shadow-lg transition duration-300 p-4 rounded-lg"
+    >
       <img
         mat-card-image
         [src]="getImageUrl(movie.poster_path)"
