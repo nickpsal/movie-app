@@ -24,6 +24,13 @@
         alt="{{ movie.title }}"
         class="object-cover rounded-t transition-transform duration-100 hover:scale-105"
       />
+      <div
+        *ngIf="isFavorite(movie.id)"
+        class="absolute top-2 left-2 z-10 bg-yellow-300 text-black text-sm font-bold px-3 py-1 rounded shadow transform rotate-45 origin-top-left"
+      >
+        Favorite
+      </div>
+
       <mat-card-header class="p-0 mb-2">
         <mat-card-title class="text-lg font-semibold text-gray-800">
           {{ movie.title }}
