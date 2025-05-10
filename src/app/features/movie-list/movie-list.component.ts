@@ -19,6 +19,7 @@ import { TMDB_API_CONFIG } from '../../core/constants/api.config';
   templateUrl: './movie-list.component.html',
   styleUrl: './movie-list.component.css'
 })
+
 export class MovieListComponent implements AfterViewInit {
   @ViewChild('infiniteScrollTarget', { static: true }) scrollTarget!: ElementRef;
 
