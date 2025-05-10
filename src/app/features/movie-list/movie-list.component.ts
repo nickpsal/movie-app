@@ -27,7 +27,7 @@ export class MovieListComponent implements AfterViewInit {
   isLoading = signal<boolean>(false);
   hasMore = signal<boolean>(true);
   lastQuery = signal<string>('');
-  movieLang = 'en';
+  movieLang = signal<string>('en');
   movies = signal<Movie[]>([]);
 
   constructor(private movieService: MovieService) {
@@ -38,17 +38,26 @@ export class MovieListComponent implements AfterViewInit {
         distinctUntilChanged(),
         switchMap(query => {
           const clean = query.trim();
+          //detect language
+          const detectedLang = this.detectLanguage(clean);
+          this.movieLang.set(detectedLang);
+
           this.lastQuery.set(clean);
           this.currentPageNumber.set(1);
           this.hasMore.set(true);
           return clean.length > 3
-            ? this.movieService.searchMovies(clean, this.movieLang, 1)  // 🔥 hardcode page 1 here!
+            ? this.movieService.searchMovies(clean, this.movieLang(), 1)  // 🔥 hardcode page 1 here!
             : this.movieService.getLatestMovies(1);
         })
       )
       .subscribe(results => {
         this.movies.set(results);
       });
+  }
+
+  detectLanguage(query: string): 'el' | 'en' {
+    const greekRegex = /[\u0370-\u03FF]/;
+    return greekRegex.test(query) ? 'el' : 'en';
   }
 
   ngAfterViewInit(): void {
@@ -67,24 +76,24 @@ export class MovieListComponent implements AfterViewInit {
   }
 
   loadNextPage(): void {
-  this.isLoading.set(true);
-  const nextPage = this.currentPageNumber() + 1;
-  this.currentPageNumber.set(nextPage);
+    this.isLoading.set(true);
+    const nextPage = this.currentPageNumber() + 1;
+    this.currentPageNumber.set(nextPage);
 
-  const query = this.lastQuery();
+    const query = this.lastQuery();
 
-  const load$ = query.length > 3
-    ? this.movieService.searchMovies(query, this.movieLang, nextPage)
-    : this.movieService.getLatestMovies(nextPage);
+    const load$ = query.length > 3
+      ? this.movieService.searchMovies(query, this.movieLang(), nextPage)
+      : this.movieService.getLatestMovies(nextPage);
 
-  load$.subscribe(results => {
-    if (results.length === 0) {
-      this.hasMore.set(false);
-    }
-    this.movies.set([...this.movies(), ...results]); // ✅ APPEND
-    this.isLoading.set(false);
-  });
-}
+    load$.subscribe(results => {
+      if (results.length === 0) {
+        this.hasMore.set(false);
+      }
+      this.movies.set([...this.movies(), ...results]); // ✅ APPEND
+      this.isLoading.set(false);
+    });
+  }
 
   getImageUrl(image_id: string) {
     return `${TMDB_API_CONFIG.imageBaseUrl}${image_id}`;
