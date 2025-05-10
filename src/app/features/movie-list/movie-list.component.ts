@@ -32,7 +32,6 @@ export class MovieListComponent implements AfterViewInit {
   movies = signal<Movie[]>([]);
   favorites = signal<number[]>([]);
 
-
   constructor(private movieService: MovieService) {
     const search$ = toObservable(this.searchQuery);
     search$
@@ -65,12 +64,6 @@ export class MovieListComponent implements AfterViewInit {
     }
   }
 
-
-  detectLanguage(query: string): 'el' | 'en' {
-    const greekRegex = /[\u0370-\u03FF]/;
-    return greekRegex.test(query) ? 'el' : 'en';
-  }
-
   ngAfterViewInit(): void {
     const observer = new IntersectionObserver(entries => {
       const entry = entries[0];
@@ -82,8 +75,12 @@ export class MovieListComponent implements AfterViewInit {
       rootMargin: '0px',
       threshold: 1.0
     });
-
     observer.observe(this.scrollTarget.nativeElement);
+  }
+
+  detectLanguage(query: string): 'el' | 'en' {
+    const greekRegex = /[\u0370-\u03FF]/;
+    return greekRegex.test(query) ? 'el' : 'en';
   }
 
   loadNextPage(): void {
@@ -101,7 +98,7 @@ export class MovieListComponent implements AfterViewInit {
       if (results.length === 0) {
         this.hasMore.set(false);
       }
-      this.movies.set([...this.movies(), ...results]); // ✅ APPEND
+      this.movies.set([...this.movies(), ...results]);
       this.isLoading.set(false);
     });
   }
