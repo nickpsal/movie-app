@@ -10,7 +10,7 @@ import { MovieListComponent } from './features/movie-list/movie-list.component';
   ],
   standalone: true,
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'movie-app';
