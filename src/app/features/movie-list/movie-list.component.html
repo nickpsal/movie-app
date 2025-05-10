@@ -1,1 +1,39 @@
-<p>movie-list works!</p>
+<div class="w-full px-4 py-4 seach-bar">
+  <div class="flex flex-col sm:flex-row gap-3 w-full">
+    <input
+      type="text"
+      placeholder="Search for a movie..."
+      class="flex-1 w-full px-3 py-2 rounded border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+      [ngModel]="searchQuery()"
+      (ngModelChange)="searchQuery.set($event)"
+    />
+  </div>
+</div>
+
+<div class="movies-container p-4">
+  <div class="mat-elevation-z2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <mat-card *ngFor="let movie of movies()" class="movie-card">
+      <img
+        mat-card-image
+        [src]="getImageUrl(movie.poster_path)"
+        alt="{{ movie.title }}"
+      />
+      <mat-card-header>
+        <mat-card-title>{{ movie.title }}</mat-card-title>
+        <mat-card-subtitle>{{ movie.release_date }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ movie.overview | slice:0:120 }}...</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary">
+          <!-- {{ isFavorite(movie.id) ? '★ Remove' : '☆ Favorite' }} -->
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- 🟢 This triggers IntersectionObserver -->
+  <div #infiniteScrollTarget class="h-2 w-full"></div>
+</div>
+
