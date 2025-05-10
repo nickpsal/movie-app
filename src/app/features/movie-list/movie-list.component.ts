@@ -62,7 +62,7 @@ export class MovieListComponent implements AfterViewInit {
   showMovieDetails(movie: Movie): void {
     this.dialog.open(MovieDialogComponent, {
       data: movie,
-      width: '800px',
+      width: '1200px',
       maxWidth: 'unset' // ← this disables the default 80vw limit
     });
   }
@@ -113,8 +113,10 @@ export class MovieListComponent implements AfterViewInit {
     });
   }
 
-  getImageUrl(image_id: string) {
-    return `${TMDB_API_CONFIG.imageBaseUrl}${image_id}`;
+  getImageUrl(image_id: string | null): string {
+    return image_id
+      ? `${TMDB_API_CONFIG.imageBaseUrl}${image_id}`
+      : 'assets/images/no-poster.png';
   }
 
   toggleFavorite(movie: Movie): void {
