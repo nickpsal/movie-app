@@ -114,6 +114,7 @@ export class MovieListComponent implements AfterViewInit {
       : [...current, movie.id]; // if it not it add the new one
 
     this.favorites.set(updated);
+    this.movieService.showMessage("Favourite Movie List Updated");
     this.movieService.setFavourites(updated);
   }
 

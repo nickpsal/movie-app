@@ -4,15 +4,16 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TMDB_API_CONFIG } from '../constants/api.config';
 import { Movie } from '../models/movie.model';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MovieService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private snackBar: MatSnackBar) { }
 
-  searchMovies(query: string, lang: string, pageNumber:number): Observable<Movie[]> {
+  searchMovies(query: string, lang: string, pageNumber: number): Observable<Movie[]> {
     const url = `${TMDB_API_CONFIG.baseUrl}/search/movie`;
     const params = new HttpParams()
       .set('api_key', TMDB_API_CONFIG.apiKey)
@@ -24,7 +25,7 @@ export class MovieService {
       .pipe(map(res => res.results));
   }
 
-  getLatestMovies(pageNumber:number) {
+  getLatestMovies(pageNumber: number) {
     const url = `${TMDB_API_CONFIG.baseUrl}/movie/now_playing`;
     const params = new HttpParams()
       .set('api_key', TMDB_API_CONFIG.apiKey)
@@ -41,5 +42,20 @@ export class MovieService {
 
   setFavourites(updated: number[]) {
     localStorage.setItem('favorites', JSON.stringify(updated));
+  }
+
+  showMessage(message: string, options?: {
+    action?: string;
+    duration?: number;
+    panelClass?: string | string[];
+    horizontalPosition?: MatSnackBarConfig['horizontalPosition'];
+    verticalPosition?: MatSnackBarConfig['verticalPosition'];
+  }): void {
+    this.snackBar.open(message, options?.action || 'Close', {
+      duration: options?.duration || 3000,
+      panelClass: options?.panelClass || '',
+      horizontalPosition: options?.horizontalPosition || 'right',
+      verticalPosition: options?.verticalPosition || 'top',
+    });
   }
 }
