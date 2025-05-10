@@ -39,10 +39,10 @@ export class MovieListComponent implements AfterViewInit {
         switchMap(query => {
           const clean = query.trim();
           this.lastQuery.set(clean);
-          this.currentPageNumber.set(1);       // reset page
-          this.hasMore.set(true);              // reset end flag
+          this.currentPageNumber.set(1);
+          this.hasMore.set(true);
           return clean.length > 3
-            ? this.movieService.searchMovies(clean, this.movieLang, 1)
+            ? this.movieService.searchMovies(clean, this.movieLang, 1)  // 🔥 hardcode page 1 here!
             : this.movieService.getLatestMovies(1);
         })
       )
@@ -67,23 +67,24 @@ export class MovieListComponent implements AfterViewInit {
   }
 
   loadNextPage(): void {
-    this.isLoading.set(true);
-    const nextPage = this.currentPageNumber() + 1;
-    this.currentPageNumber.set(nextPage);
+  this.isLoading.set(true);
+  const nextPage = this.currentPageNumber() + 1;
+  this.currentPageNumber.set(nextPage);
 
-    const query = this.lastQuery();
-    const load$ = query.length > 3
-      ? this.movieService.searchMovies(query, this.movieLang, nextPage)
-      : this.movieService.getLatestMovies(nextPage);
+  const query = this.lastQuery();
 
-    load$.subscribe(results => {
-      if (results.length === 0) {
-        this.hasMore.set(false);
-      }
-      this.movies.set([...this.movies(), ...results]);
-      this.isLoading.set(false);
-    });
-  }
+  const load$ = query.length > 3
+    ? this.movieService.searchMovies(query, this.movieLang, nextPage)
+    : this.movieService.getLatestMovies(nextPage);
+
+  load$.subscribe(results => {
+    if (results.length === 0) {
+      this.hasMore.set(false);
+    }
+    this.movies.set([...this.movies(), ...results]); // ✅ APPEND
+    this.isLoading.set(false);
+  });
+}
 
   getImageUrl(image_id: string) {
     return `${TMDB_API_CONFIG.imageBaseUrl}${image_id}`;
