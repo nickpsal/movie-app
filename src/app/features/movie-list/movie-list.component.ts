@@ -29,6 +29,8 @@ export class MovieListComponent implements AfterViewInit {
   lastQuery = signal<string>('');
   movieLang = signal<string>('en');
   movies = signal<Movie[]>([]);
+  favorites = signal<number[]>([]);
+
 
   constructor(private movieService: MovieService) {
     const search$ = toObservable(this.searchQuery);
@@ -54,6 +56,14 @@ export class MovieListComponent implements AfterViewInit {
         this.movies.set(results);
       });
   }
+
+  ngOnInit(): void {
+    const stored = localStorage.getItem('favorites');
+    if (stored) {
+      this.favorites.set(JSON.parse(stored));
+    }
+  }
+
 
   detectLanguage(query: string): 'el' | 'en' {
     const greekRegex = /[\u0370-\u03FF]/;
@@ -98,4 +108,19 @@ export class MovieListComponent implements AfterViewInit {
   getImageUrl(image_id: string) {
     return `${TMDB_API_CONFIG.imageBaseUrl}${image_id}`;
   }
+
+  toggleFavorite(movie: Movie): void {
+    const current = this.favorites();
+    const updated = current.includes(movie.id)
+      ? current.filter(id => id !== movie.id)
+      : [...current, movie.id];
+
+    this.favorites.set(updated);
+    localStorage.setItem('favorites', JSON.stringify(updated));
+  }
+
+  isFavorite(id: number): boolean {
+    return this.favorites().includes(id);
+  }
+
 }
