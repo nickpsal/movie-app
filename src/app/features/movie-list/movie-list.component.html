@@ -11,20 +11,34 @@
 </div>
 
 <div class="movies-container p-4">
-  <div class="mat-elevation-z2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-    <mat-card *ngFor="let movie of movies()" class="movie-card">
+  <div
+    class="mat-elevation-z2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+  >
+    <mat-card *ngFor="let movie of movies()" class="movie-card flex flex-col items-center text-center shadow hover:shadow-lg transition duration-300 p-4 rounded-lg">
       <img
         mat-card-image
         [src]="getImageUrl(movie.poster_path)"
         alt="{{ movie.title }}"
+        class="object-cover rounded-t transition-transform duration-100 hover:scale-105"
       />
-      <mat-card-header>
-        <mat-card-title>{{ movie.title }}</mat-card-title>
-        <mat-card-subtitle>{{ movie.release_date }}</mat-card-subtitle>
+      <mat-card-header class="p-0 mb-2">
+        <mat-card-title class="text-lg font-semibold text-gray-800">
+          {{ movie.title }}
+        </mat-card-title>
+        <mat-card-subtitle class="text-sm text-gray-500">
+          {{ movie.release_date | date : "mediumDate" }}
+        </mat-card-subtitle>
       </mat-card-header>
-      <mat-card-content>
-        <p>{{ movie.overview | slice:0:120 }}...</p>
+      <mat-card-content class="px-4 pb-4 text-sm text-gray-700">
+        <p>
+          {{
+            movie.overview
+              ? (movie.overview | slice : 0 : 240) + "…"
+              : "No description available."
+          }}
+        </p>
       </mat-card-content>
+
       <mat-card-actions>
         <button mat-button color="primary">
           <!-- {{ isFavorite(movie.id) ? '★ Remove' : '☆ Favorite' }} -->
@@ -36,4 +50,3 @@
   <!--Triggers IntersectionObserver -->
   <div #infiniteScrollTarget class="h-2 w-full"></div>
 </div>
-
