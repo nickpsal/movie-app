@@ -1,1 +1,28 @@
-<p>movie-dialog works!</p>
+<h2 mat-dialog-title class="text-2xl font-bold text-center text-gray-800 mb-2">
+  {{ data.title }}
+</h2>
+
+<mat-dialog-content class="text-gray-700 text-sm space-y-3 px-4 pb-4 text-justify">
+  <div class="w-full flex justify-center">
+    <img
+      [src]="getImageUrl(data.poster_path)"
+      alt="{{ data.title }}"
+      class="max-h-[400px] w-auto object-cover rounded-lg shadow"
+    />
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+    <p><strong>Release Date:</strong> {{ data.release_date | date }}</p>
+    <p><strong>Language:</strong> {{ data.original_language | uppercase }}</p>
+    <p><strong>Rating:</strong> {{ data.vote_average }} ({{ data.vote_count }} votes)</p>
+  </div>
+
+  <div>
+    <p><strong>Overview:</strong></p>
+    <p>{{ data.overview || 'No overview available for this movie.' }}</p>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="px-4 pb-4">
+  <button mat-stroked-button mat-dialog-close color="primary">Close</button>
+</mat-dialog-actions>

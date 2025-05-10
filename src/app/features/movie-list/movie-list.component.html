@@ -22,7 +22,8 @@
         mat-card-image
         [src]="getImageUrl(movie.poster_path)"
         alt="{{ movie.title }}"
-        class="object-cover rounded-t transition-transform duration-100 hover:scale-105"
+        (click)="showMovieDetails(movie)"
+        class="object-cover rounded-t transition-transform duration-100 hover:scale-105 cursor-pointer"
       />
       <div
         *ngIf="isFavorite(movie.id)"

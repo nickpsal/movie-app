@@ -7,6 +7,8 @@ import { toObservable } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TMDB_API_CONFIG } from '../../core/constants/api.config';
+import { MovieDialogComponent } from '../movie-dialog/movie-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-movie-list',
@@ -32,7 +34,7 @@ export class MovieListComponent implements AfterViewInit {
   movies = signal<Movie[]>([]);
   favorites = signal<number[]>([]);
 
-  constructor(private movieService: MovieService) {
+  constructor(private movieService: MovieService, private dialog: MatDialog) {
     const search$ = toObservable(this.searchQuery);
     search$
       .pipe(
@@ -55,6 +57,14 @@ export class MovieListComponent implements AfterViewInit {
       .subscribe(results => {
         this.movies.set(results);
       });
+  }
+
+  showMovieDetails(movie: Movie): void {
+    this.dialog.open(MovieDialogComponent, {
+      data: movie,
+      width: '800px',
+      maxWidth: 'unset' // ← this disables the default 80vw limit
+    });
   }
 
   ngOnInit(): void {
