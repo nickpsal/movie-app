@@ -58,7 +58,7 @@ export class MovieListComponent implements AfterViewInit {
   }
 
   ngOnInit(): void {
-    const stored = localStorage.getItem('favorites');
+    const stored = this.movieService.getFavourites();
     if (stored) {
       this.favorites.set(JSON.parse(stored));
     }
@@ -112,15 +112,14 @@ export class MovieListComponent implements AfterViewInit {
   toggleFavorite(movie: Movie): void {
     const current = this.favorites();
     const updated = current.includes(movie.id)
-      ? current.filter(id => id !== movie.id)
-      : [...current, movie.id];
+      ? current.filter(id => id !== movie.id) //if it is favourite it remove it
+      : [...current, movie.id]; // if it not it add the new one
 
     this.favorites.set(updated);
-    localStorage.setItem('favorites', JSON.stringify(updated));
+    this.movieService.setFavourites(updated);
   }
 
   isFavorite(id: number): boolean {
     return this.favorites().includes(id);
   }
-
 }

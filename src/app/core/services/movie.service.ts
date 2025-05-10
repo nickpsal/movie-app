@@ -34,4 +34,12 @@ export class MovieService {
     return this.http.get<any>(url, { params })
       .pipe(map(res => res.results));
   }
+
+  getFavourites() {
+    return localStorage.getItem('favorites');
+  }
+
+  setFavourites(updated: number[]) {
+    localStorage.setItem('favorites', JSON.stringify(updated));
+  }
 }
