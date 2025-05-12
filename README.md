@@ -1,5 +1,7 @@
 # MovieApp
-
+This project uses free apikey from https://www.themoviedb.org/ to get Movies.
+When it loads is getting the latest movies from API with infinity schroll.
+Search Bar is automatically searching movie by the title you provided.
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.10.
 
 ## Development server
